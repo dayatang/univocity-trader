@@ -20,10 +20,8 @@
 			<groupId>com.interactivebrokers</groupId>
 			<artifactId>twsapi</artifactId>
 			<version>9.76</version>
-			<scope>system</scope>
-			<systemPath>${user.home}/dev/IBJts/source/JavaClient/TwsApi_debug.jar</systemPath>
 		</dependency>
-	
+
 
 		<dependency>
 			<groupId>com.univocity</groupId>
