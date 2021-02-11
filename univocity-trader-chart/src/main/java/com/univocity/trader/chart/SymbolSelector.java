@@ -159,6 +159,11 @@ public class SymbolSelector extends JPanel {
 	}
 
 	private void executeBackfill() {
+		if(!candleRepository.isWritingSupported()){
+			log.warn("Can't backfill data. Writing not supported");
+			return;
+		}
+
 		Exchange<?, ?> exchange = getExchangeSelector().getSelectedExchange();
 		if (exchange == null) {
 			getBtUpdate().setEnabled(false);
@@ -167,7 +172,7 @@ public class SymbolSelector extends JPanel {
 		Thread thread = new Thread(() -> {
 			try {
 				glassPane.activate("Updating history of " + getSymbol());
-				CandleHistoryBackfill backfill = new CandleHistoryBackfill(candleRepository);
+				CandleHistoryBackfill backfill = new CandleHistoryBackfill((DatabaseCandleRepository) candleRepository);
 				backfill.fillHistoryGaps(exchange, getSymbol(), getChartStart().getCommittedValue(), Instant.now(), TimeInterval.minutes(1));
 				fillAvailableDates();
 				loadCandles();
@@ -401,7 +406,7 @@ public class SymbolSelector extends JPanel {
 
 	public static void main(String... args) {
 		DatabaseConfiguration databaseConfiguration = new SimulationConfiguration().database();
-		CandleRepository candleRepository = new CandleRepository(databaseConfiguration);
+		DatabaseCandleRepository candleRepository = new DatabaseCandleRepository(databaseConfiguration);
 
 //		CandleRepository candleRepository = new CandleRepository(databaseConfiguration);
 
